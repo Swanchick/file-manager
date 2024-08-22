@@ -7,5 +7,12 @@
 </head>
 <body>
   <h1>Welcome to Clouddle!</h1>
+
+  <form action="/send" method="post" enctype="multipart/form-data">
+    <input type="file" name="uploaded_file">
+    <input type="submit">
+  </form>
+
+  <a href="/files">View all files</a>
 </body>
 </html>
