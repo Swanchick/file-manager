@@ -1,5 +1,5 @@
 use rocket::response::Redirect;
-use rocket::{get, launch, post, routes, Build, Rocket, Error};
+use rocket::{get, launch, post, routes};
 use rocket_dyn_templates::{Template, context};
 use rocket::form::Form;
 use rocket::http::{Cookie, CookieJar};
@@ -43,9 +43,9 @@ fn index(jar: &CookieJar) -> Template {
 
 #[get("/files")]
 fn get_files(jar: &CookieJar) -> Template {
-    
-    
-    Template::render("files", context! {})
+    let cloud_key = get_cloud_key(jar);
+
+    Template::render("files", context! {cloud_key: cloud_key})
 }
 
 

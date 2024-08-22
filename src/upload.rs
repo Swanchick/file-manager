@@ -2,7 +2,7 @@ use rocket::form::FromForm;
 use rocket::fs::TempFile;
 use std::{io, fs};
 use std::path::{Path, PathBuf};
-use crate::{upload_file, DATA_PATH};
+use crate::DATA_PATH;
 
 #[derive(FromForm)]
 pub struct UplaodFileForm<'r> {
