@@ -10,7 +10,7 @@ pub struct UplaodFileForm<'r> {
 }
 
 impl<'r> UplaodFileForm<'r> {
-    fn get_folder(&self, cloud_key: String) -> io::Result<PathBuf> {
+    fn get_folder(&self, cloud_key: String, file_name: String) -> io::Result<PathBuf> {
         let path = Path::new(DATA_PATH);
         if !path.exists() {
             fs::create_dir(path)?;
@@ -21,8 +21,10 @@ impl<'r> UplaodFileForm<'r> {
         if !full_path.exists() {
             fs::create_dir(&full_path)?;
         }
+        
+        let final_path = full_path.join(Path::new(&file_name));
 
-        Ok(full_path)
+        Ok(final_path)
     }
 
     fn get_file_name(&self) -> String {
@@ -35,15 +37,11 @@ impl<'r> UplaodFileForm<'r> {
     }
     
     pub async fn save_file(&mut self, cloud_key: String) -> io::Result<()> {
-        match self.get_folder(cloud_key) {
-            Ok(path) => {
-                let file_name = self.get_file_name();
-                let final_path = path.join(Path::new(&file_name));
-                
-                println!("{:?}", final_path);
-                println!("{}", final_path.exists());
-                
-                if let Err(e) = self.uploaded_file.copy_to(final_path.into_os_string()).await {
+        let file_name = self.get_file_name();
+        
+        match self.get_folder(cloud_key, file_name) {
+            Ok(path) => {                                
+                if let Err(e) = self.uploaded_file.copy_to(path).await {
                     eprintln!("{}", e);
                 };
             }
