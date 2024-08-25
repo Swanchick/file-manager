@@ -6,6 +6,11 @@
   <title>Files</title>
 </head>
 <body>
-  <h1>{{ cloud_key }}</h1>
+  {% for file in files %}
+    <p>{{ file }}</p>
+    <a href="/donwload/{{ file }}">Donwload</a>
+    <a href="/delete/{{ file }}">Delete</a>
+
+  {% endfor %}
 </body>
 </html>
