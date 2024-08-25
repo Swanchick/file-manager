@@ -106,6 +106,19 @@ async fn donwload_file(jar: &CookieJar<'_>, file_name: String) -> Result<NamedFi
     }
 }
 
+#[get("/remove/<file_name>")]
+async fn remove_file(jar: &CookieJar<'_>, file_name: String) -> Redirect {
+    let cloud_key = get_cloud_key(jar);
+    let cloud_dir = get_cloud_directory(&cloud_key).unwrap();
+    let file_path = cloud_dir.join(file_name);
+    
+    if file_path.exists() {
+        fs::remove_file(file_path).unwrap();
+    }
+    
+    Redirect::to("/")
+}
+
 
 #[launch]
 fn rocket() -> _ {
@@ -117,5 +130,5 @@ fn rocket() -> _ {
 
     rocket::build()
     .attach(Template::fairing())
-    .mount("/", routes![index, upload_file, get_files, donwload_file])
+    .mount("/", routes![index, upload_file, get_files, donwload_file, remove_file])
 }
