@@ -8,7 +8,7 @@
 <body>
   {% for file in files %}
     <p>{{ file }}</p>
-    <a href="/donwload/{{ file }}">Donwload</a>
+    <a href="/download/{{ file }}">Donwload</a>
     <a href="/delete/{{ file }}">Delete</a>
 
   {% endfor %}

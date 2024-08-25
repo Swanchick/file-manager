@@ -1,3 +1,4 @@
+use rocket::fs::NamedFile;
 use rocket::response::Redirect;
 use rocket::{get, launch, post, routes};
 use rocket_dyn_templates::{Template, context};
@@ -92,9 +93,17 @@ fn get_files(jar: &CookieJar) -> Result<Template, Redirect> {
     }
 }
 
-#[get("/donwload/<file_name>")]
-fn donwload_file(file_name: String) {
+#[get("/download/<file_name>")]
+async fn donwload_file(jar: &CookieJar<'_>, file_name: String) -> Result<NamedFile, Redirect> {
+    let cloud_key = get_cloud_key(jar);
+    let cloud_dir = get_cloud_directory(&cloud_key).unwrap();
+    let file_path = cloud_dir.join(file_name);
     
+    if file_path.exists() {
+        Ok(NamedFile::open(file_path).await.unwrap())
+    } else {
+        Err(Redirect::to("/"))
+    }
 }
 
 
@@ -108,5 +117,5 @@ fn rocket() -> _ {
 
     rocket::build()
     .attach(Template::fairing())
-    .mount("/", routes![index, upload_file, get_files])
+    .mount("/", routes![index, upload_file, get_files, donwload_file])
 }

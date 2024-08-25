@@ -1,6 +1,6 @@
 use rocket::form::FromForm;
 use rocket::fs::TempFile;
-use std::{io, fs};
+use std::io;
 use std::path::{Path, PathBuf};
 use crate::get_cloud_directory;
 
